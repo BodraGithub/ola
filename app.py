@@ -14,7 +14,7 @@ import streamlit as st
 BASE = Path(__file__).parent
 DB = BASE / "data" / "ola.db"
 SQL_FILE = BASE / "queries.sql"
-PALETTE = ["#1B1F23", "#8FB400", "#2F6F5E", "#E8A33D", "#6C7A89", "#C0392B", "#4C9F70"]
+PALETTE = ["#8FB400", "#3FA7D6", "#E8A33D", "#E4572E", "#9B6DD6", "#2FBF9B", "#F2C14E"]
 
 st.set_page_config(page_title="OLA Ride Insights", page_icon="🚖", layout="wide")
 
@@ -193,7 +193,10 @@ elif page == "Power BI":
     st.title("Power BI dashboard")
     st.caption("Publish the dashboard (see powerbi_guide.md), then use File > Embed report > Publish to web "
                "and paste the link below, or set POWERBI_URL in .streamlit/secrets.toml.")
-    default = st.secrets.get("POWERBI_URL", "") if hasattr(st, "secrets") else ""
+    try:
+        default = st.secrets["POWERBI_URL"]
+    except Exception:  # no secrets.toml, or key not set
+        default = ""
     url = st.text_input("Power BI embed URL", default)
     if url.startswith("https://app.powerbi.com/"):
         st.components.v1.iframe(url, height=650, scrolling=True)
